@@ -132,7 +132,7 @@ while True:
         dibujarMatriz(m, 10, True, (-4, 4))
         dibujarMatriz(m, 10, False, (0, 0))
 
-        m = conway(m)
+        m = BriansBrain(m)
 
         pygame.display.update()
         siguienteCuadro = time.time() + 0.5
