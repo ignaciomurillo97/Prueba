@@ -5,7 +5,6 @@ import time
 ## colores
 backgroundColor = (70, 70, 70)
 blanco = (255, 255, 255)
-zombie = (200, 150, 150)
 negro = (0, 0, 0)
 sombraColor = (50, 50, 50)
 
@@ -16,26 +15,28 @@ pygame.display.set_caption("Automatas Celulares")
 
 
 ## Funcion que dibuja una matriz
-def dibujarMatriz (matriz, ladoCuadrado, sombra, desplazamiento):
+def dibujarMatriz (matriz, ladoCuadrado, colores, desplazamiento):
     desplazamientoX = screen.get_size()[0]/2 - ladoCuadrado * len(matriz) / 2 + desplazamiento[0]
     desplazamientoY = screen.get_size()[1]/2 - ladoCuadrado * len(matriz) / 2 + desplazamiento[1]
     for y in range(len(matriz)):
         for x in range(len(matriz[0])):
-            if matriz[y][x] == 1:
+            if colores[matriz[y][x]] != negro:
+                cuadrado = (x * ladoCuadrado + desplazamientoX, y * ladoCuadrado + desplazamientoY, ladoCuadrado, ladoCuadrado)                
+                screen.fill(colores[matriz[y][x]], rect=cuadrado)
 
-                cuadrado = (x * ladoCuadrado + desplazamientoX, y * ladoCuadrado + desplazamientoY, ladoCuadrado, ladoCuadrado)
-                if not sombra:
-                    screen.fill(blanco, rect=cuadrado)
-                else:
-                    screen.fill(sombraColor, rect=cuadrado)
-            if matriz[y][x] == 0.5:
-                cuadrado = (x * ladoCuadrado + desplazamientoX, y * ladoCuadrado + desplazamientoY, ladoCuadrado, ladoCuadrado)
-                if not sombra:
-                    screen.fill(zombie, rect=cuadrado)
-                else:
-                    screen.fill(sombraColor, rect=cuadrado)
+        
+## Funcion que dibuja un cuadrado de color "sombra" en cualquier lugar donde la matriz no sea cero
+## debe dibujar antes que la matriz y dara un efecto de sombra en los cuadrados seleccionados                
+def dibujarSombra (matriz, ladoCuadrado, desplazamiento):
+    desplazamientoX = screen.get_size()[0]/2 - ladoCuadrado * len(matriz) / 2 + desplazamiento[0]
+    desplazamientoY = screen.get_size()[1]/2 - ladoCuadrado * len(matriz) / 2 + desplazamiento[1]
+    for y in range(len(matriz)):
+        for x in range(len(matriz[0])):
+            if matriz[y][x] != 0:
+                cuadrado = (x * ladoCuadrado + desplazamientoX, y * ladoCuadrado + desplazamientoY, ladoCuadrado, ladoCuadrado)                
+                screen.fill(sombraColor, rect=cuadrado)
 
-
+                
 ## Funcion que crea una matriz con un porcentaje dado de 'unos'
 def matrizRandom (lado, probabiliddad):
     matriz = []
@@ -117,10 +118,10 @@ while True:
             quit()
     if time.time() > siguienteCuadro:
         screen.fill(backgroundColor)
-        dibujarMatriz(m, 10, True, (-4, 4))
-        dibujarMatriz(m, 10, False, (0, 0))
+        dibujarSombra(m, 10, (-4, 4))
+        dibujarMatriz(m, 10, [negro, blanco], (0, 0))
 
-        m = BriansBrain(m)
+        m = conway(m)
 
         pygame.display.update()
         siguienteCuadro = time.time() + 0.5
