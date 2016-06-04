@@ -5,7 +5,7 @@ import time
 ## colores
 backgroundColor = (70, 70, 70)
 blanco = (255, 255, 255)
-negro = (0, 0, 0)
+negro = (0, 0, 0) ## el negro en la funcion dibujarMatriz lo deja "transparente" (no lo dibuja)
 sombraColor = (50, 50, 50)
 
 ## inicializar la ventana de pygame
@@ -14,7 +14,13 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Automatas Celulares")
 
 
-## Funcion que dibuja una matriz
+## Funcion que dibuja una matriz.
+## Entradas:
+##  - Matriz: matriz que sera dibujada, esta debe tener como elementos los indices del color que se
+##    desea usar  de la matriz "colores", por ejemplo:
+##  - ladoCuadrado: la medida de un cuadrado de la matriz
+##  - Colores: lista de colores que se usaran, el ne
+
 def dibujarMatriz (matriz, ladoCuadrado, colores, desplazamiento):
     desplazamientoX = screen.get_size()[0]/2 - ladoCuadrado * len(matriz) / 2 + desplazamiento[0]
     desplazamientoY = screen.get_size()[1]/2 - ladoCuadrado * len(matriz) / 2 + desplazamiento[1]
@@ -109,19 +115,20 @@ def conway (matriz):
 m = matrizRandom(50, 45)
 m1 = [[0, 0, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 0, 0]]
 
-## PyGame main loop
-siguienteCuadro = time.time() + 0.5
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            quit()
-    if time.time() > siguienteCuadro:
-        screen.fill(backgroundColor)
-        dibujarSombra(m, 10, (-4, 4))
-        dibujarMatriz(m, 10, [negro, blanco], (0, 0))
+def correrConway(): 
+    ## PyGame main loop
+    siguienteCuadro = time.time() + 0.5
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        if time.time() > siguienteCuadro:
+            screen.fill(backgroundColor)
+            dibujarSombra(m, 10, (-4, 4))
+            dibujarMatriz(m, 10, [negro, blanco], (0, 0))
 
-        m = conway(m)
+            m = conway(m)
 
-        pygame.display.update()
-        siguienteCuadro = time.time() + 0.5
+            pygame.display.update()
+            siguienteCuadro = time.time() + 0.5
