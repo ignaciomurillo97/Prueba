@@ -103,18 +103,6 @@ def conway (matriz):
                     nuevaMatriz[y][x] = 0
     return nuevaMatriz
 
-def BriansBrain (matriz):
-    nuevaMatriz = [ [0 for i in range(len(matriz[0]))] for j in range(len(matriz)) ]
-    for y in range(len(matriz)):
-        for x in range(len(matriz[0])):
-            vecinos = celulasAdyacentes(x, y, matriz) + celulasDiagonales(x, y, matriz)
-            if matriz[y][x] == 1:
-                nuevaMatriz[y][x] = 0.5
-            if matriz[y][x] == 0.5:
-                nuevaMatriz[y][x] = 0
-            if matriz[y][x] == 0 and vecinos == 2:
-                nuevaMatriz[y][x] = 1
-    return nuevaMatriz
 
 ## Crear Matrices
 m = matrizRandom(50, 45)
