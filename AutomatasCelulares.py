@@ -8,7 +8,7 @@ backgroundColor = (70, 70, 70)
 blanco = (255, 255, 255)
 negro = (0, 0, 0) ## el negro en la funcion dibujarMatriz lo deja "transparente" (no lo dibuja)
 sombraColor = (50, 50, 50)
-ormiga = (170, 170, 255)
+hormiga = (170, 170, 255)
 
 ## inicializar la ventana de pygame
 pygame.init()
@@ -263,47 +263,43 @@ def conway (matriz):
                     nuevaMatriz[y][x] = 0
     return nuevaMatriz
 
-## Funcion auxiliar para la Funcion hormiga langton, devuelve la posicion de la hormiga 1 cuadro en la direccion que esta orientada la ormiga
+## Funcion auxiliar para la Funcion hormiga langton, devuelve la posicion de la hormiga 1 cuadro en la direccion que esta orientada la hormiga
 ## Entradas:
-##  - ormigaPos: tupla o lista con la posicion actual de la hormiga en la matriz
-##  - ormigaOrientacion: recibe un int entre 0 y 4 con la ormigaOrientacion de la hormiga
+##  - hormigaPos: tupla o lista con la posicion actual de la hormiga en la matriz
+##  - hormigaOrientacion: recibe un int entre 0 y 4 con la hormigaOrientacion de la hormiga
 ## Salidas:
 ##  - tupla de dos ints con la nueva posicion de la hormiga
-def moverOrmiga(ormigaPos, ormigaOrientacion):
-    if ormigaOrientacion == 0:
-        ormigaPos[0] += 1
-    elif ormigaOrientacion == 1:
-        ormigaPos[1] += 1
-    elif ormigaOrientacion == 2:
-        ormigaPos[0] -= 1
-    elif ormigaOrientacion == 3:
-        ormigaPos[1] -= 1
+def moverOrmiga(hormigaPos, hormigaOrientacion):
+    if hormigaOrientacion == 0:
+        hormigaPos[0] += 1
+    elif hormigaOrientacion == 1:
+        hormigaPos[1] += 1
+    elif hormigaOrientacion == 2:
+        hormigaPos[0] -= 1
+    elif hormigaOrientacion == 3:
+        hormigaPos[1] -= 1
 
-    return ormigaPos
+    return hormigaPos
 
-## Funcion Ormiga de langton
-def hormigaLangton(matriz, ormigaPos, ormigaOrientacion):
-    for y in range(len(matriz)):
-        for x in range(len(matriz[0])):
-            if [x, y] == ormigaPos: ## buscar el cuadrado en el que esta la ormiga
-                if 0 < x < (len(matriz[0]) - 1) and 0 < y < (len(matriz) - 1):
-                    if matriz[y][x] == 0: ## celula muerta
-                        matriz[y][x] = 1 ## cambiar color del espacio donde esta la ormiga
-                        ormigaOrientacion = (ormigaOrientacion-1)%4 ## giro derecha
-                        ormigaPos = moverOrmiga(ormigaPos, ormigaOrientacion) ## avanzar un espacio
-                        return matriz, ormigaPos, ormigaOrientacion
+## Funcion hormiga de langton
+def hormigaLangton(matriz, hormigaPos, hormigaOrientacion):
+    x = hormigaPos[0]
+    y = hormigaPos[1]
+    if 0 < x < (len(matriz[0]) - 1) and 0 < y < (len(matriz) - 1):
+        if matriz[y][x] == 0: ## celula muerta
+            matriz[y][x] = 1 ## cambiar color del espacio donde esta la hormiga
+            hormigaOrientacion = (hormigaOrientacion-1)%4 ## giro derecha
+            hormigaPos = moverOrmiga(hormigaPos, hormigaOrientacion) ## avanzar un espacio
+            return matriz, hormigaPos, hormigaOrientacion
 
-                    else: ## celula viva
-                        matriz[y][x] = 0 ## cambiar color del espacio donde esta la ormiga
-                        ormigaOrientacion = (ormigaOrientacion+1)%4 ## giro izquierda
-                        ormigaPos = moverOrmiga(ormigaPos, ormigaOrientacion) ## avanzar un espacio
-                        return matriz, ormigaPos, ormigaOrientacion
+        else: ## celula viva
+            matriz[y][x] = 0 ## cambiar color del espacio donde esta la hormiga
+            hormigaOrientacion = (hormigaOrientacion+1)%4 ## giro izquierda
+            hormigaPos = moverOrmiga(hormigaPos, hormigaOrientacion) ## avanzar un espacio
+            return matriz, hormigaPos, hormigaOrientacion
 
-                else:
-                    return matriz, ormigaPos, ormigaOrientacion
-
-
-
+    else:
+        return matriz, hormigaPos, hormigaOrientacion
 
 ## Crear Matrices
 m = matrizRandom(100, 0)
@@ -340,7 +336,7 @@ def correrHormiga(m, pos, orientacion, delay):
 
             m1 = deepcopy(m)
             m1[pos[1]][pos[0]] = 2
-            dibujarMatriz(m1, 5, [negro, blanco, ormiga], (0, 0))
+            dibujarMatriz(m1, 5, [negro, blanco, hormiga], (0, 0))
 
             m, pos, orientacion = hormigaLangton(m, pos, orientacion)
 
