@@ -10,11 +10,7 @@ negro = (0, 0, 0) ## el negro en la funcion dibujarMatriz lo deja "transparente"
 sombraColor = (50, 50, 50)
 hormiga = (170, 170, 255)
 
-## inicializar la ventana de pygame
-pygame.init()
-screen = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("Automatas Celulares")
-
+screen = pygame.display.set_mode((0, 0))
 
 ## Funcion que dibuja una matriz.
 ## Entradas:
@@ -243,8 +239,18 @@ def celulasDiagonales (x, y, matriz):
     return vecinos
 
 
-## Automata Conway
+## Funcion que calcula el sigiente estado de la matriz segun las reglas del automata de Conway
+## Entrads:
+##  - Matriz:el estado actual de la matriz al que se le desea aplicar conway
+## Salidas:
+##  - la matriz resultante tras aplicarle las reglas del automata de Conway
+## Restricciones:
+##  - la matriz debe calificar como matriz
 def conway (matriz):
+    if not esMatriz(matriz):
+        print("Conway: la matriz no esta correcta")
+        return
+
     nuevaMatriz = [ [0 for i in range(len(matriz[0]))] for j in range(len(matriz)) ]
     for y in range(len(matriz)):
         for x in range(len(matriz[0])):
@@ -281,8 +287,32 @@ def moverOrmiga(hormigaPos, hormigaOrientacion):
 
     return hormigaPos
 
-## Funcion hormiga de langton
+## Funcion que calcula el siguiente estado de una matriz segun las reglas de hormiga de langton
+## Entradas:
+##  - Matriz: una matriz con los valores actuales del Automata
+##  - hormigaPos: una lista con la posicion actual de la hormiga dentro de la matriz del Automata
+##  - hormigaOrientacion: Direccion en la que esta orientada la hormiga
+## Salidas:
+##  - retorna el siguiente estado de la matriz segun las reglas del automata 'Hormiga de Langton'
+## Restricciones:
+##  - la matriz debe calificar como matriz
+##  - la posicion de la hormiga debe ser una tupla de dos ints
+##  - la orientacion de lo hormiga debe ser 0, 1, 2 o 3
 def hormigaLangton(matriz, hormigaPos, hormigaOrientacion):
+
+    if not esMatriz(matriz):
+        print("La matriz no califica como matriz")
+        return
+    if not isinstance(hormigaPos, list) or len(hormigaPos) != 2:
+        print("la posicion de la hormiga debe ser una lista de 2 eleentos")
+        return
+    if not all (isinstance(x, int) for x in hormigaPos):
+        print("todos los elementos de hormiga pos deben ser ints")
+        return
+    if not isinstance(hormigaOrientacion, int) or 0 > hormigaOrientacion > 3:
+        print("la orientacion de la ormiga debe ser 0, 1, 2 o 3")
+        return
+
     x = hormigaPos[0]
     y = hormigaPos[1]
     if 0 < x < (len(matriz[0]) - 1) and 0 < y < (len(matriz) - 1):
@@ -302,11 +332,22 @@ def hormigaLangton(matriz, hormigaPos, hormigaOrientacion):
         return matriz, hormigaPos, hormigaOrientacion
 
 ## Crear Matrices
-m = matrizRandom(100, 0)
-m1 = [[0, 0, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 0, 0]]
+matrizConway = matrizRandom(200, 50)
+matrizHormiga = [[0 for x in range(100)] for y in range(100)]
 
 def correrConway(m):
-    siguienteCuadro = time.time() + 0.5
+    ## inicializar la ventana de pygame
+    pygame.init()
+    screen = pygame.display.set_mode((len(m) * 3 + 25, len(m) * 3 + 25))
+    pygame.display.set_caption("Automatas Celulares")
+
+    ## musica
+
+    pygame.mixer.music.load("Backlash.mp3")
+    pygame.mixer.music.play(-1, 0.02)
+
+
+    siguienteCuadro = time.time() + 0.4
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -314,8 +355,8 @@ def correrConway(m):
                 quit()
         if time.time() > siguienteCuadro:
             screen.fill(backgroundColor)
-            dibujarSombra(m, 5, (-4, 4))
-            dibujarMatriz(m, 5, [negro, blanco], (0, 0))
+            dibujarSombra(m, 3, (-4, 4))
+            dibujarMatriz(m, 3, [negro, blanco], (0, 0))
 
             m = conway(m)
 
@@ -343,21 +384,7 @@ def correrHormiga(m, pos, orientacion, delay):
             pygame.display.update()
             siguienteCuadro = time.time() + delay
 
-correrHormiga(m, [49, 49], 0, 0)
-#correrConway(m)
+#correrHormiga(matrizHormiga, [49, 49], 0, 0)
+correrConway(matrizConway)
 
 ## pruebas!!
-def pba(m):
-    siguienteCuadro = time.time() + 0.5
-    screen.fill(backgroundColor)
-    dibujarSombra(m, 25, (-8, 8))
-    dibujarMatriz(m, 25, [negro, blanco], (0, 0))
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-        pygame.display.update()
-
-
-##pba(m1)
