@@ -332,10 +332,19 @@ def hormigaLangton(matriz, hormigaPos, hormigaOrientacion):
         return matriz, hormigaPos, hormigaOrientacion
 
 ## Crear Matrices
-matrizConway = matrizRandom(200, 50)
-matrizHormiga = [[0 for x in range(100)] for y in range(100)]
 
-def correrConway(m):
+## procedimiento que corre connway en una ventana de pygame
+## Entradas:
+##  - tamañoMatriz: float que define el ancho y el alto de la matriz que se usara para el automata
+## Restrucciones:
+##  - tamañoMatriz debe ser un int
+def correrConway(tamañoMatriz):
+    if not isinstance(tamañoMatriz, int):
+        print("el tamaño de la matriz debe ser un int")
+        return
+
+    m = matrizRandom(tamañoMatriz, 50)
+
     ## inicializar la ventana de pygame
     pygame.init()
     screen = pygame.display.set_mode((len(m) * 3 + 25, len(m) * 3 + 25))
@@ -345,8 +354,6 @@ def correrConway(m):
 
     pygame.mixer.music.load("Backlash.mp3")
     pygame.mixer.music.play(-1, 0.02)
-
-
     siguienteCuadro = time.time() + 0.4
     while True:
         for event in pygame.event.get():
@@ -363,8 +370,26 @@ def correrConway(m):
             pygame.display.update()
             siguienteCuadro = time.time() + 0.5
 
-def correrHormiga(m, pos, orientacion, delay):
+## procedimiento que corre el automata celular 'la hormiga de langton'
+## Entradas:
+##  - tamañoMatriz: float que define el ancho y el alto de la matriz que se usara para el automata
+## Restrucciones:
+##  - tamañoMatriz debe ser un int
+def correrHormiga(tamañoMatriz):
+
+    if not isinstance(tamañoMatriz, int):
+        print("el tamaño de la matriz debe ser un int")
+        return
+
+    parametros
+    m = [[0 for x in range(tamañoMatriz)] for y in range(tamañoMatriz)]
+    pos = [49, 49]
+    orientacion = 0
+    delay = 0
+
+
     siguienteCuadro = time.time() + delay
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -385,6 +410,6 @@ def correrHormiga(m, pos, orientacion, delay):
             siguienteCuadro = time.time() + delay
 
 #correrHormiga(matrizHormiga, [49, 49], 0, 0)
-correrConway(matrizConway)
+correrConway(100)
 
 ## pruebas!!
